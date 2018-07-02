@@ -1,2 +1,3 @@
-# tic-tac-toe-ruby
-Tic Tac Toe in Ruby
+# Tic Tac Toe Ruby
+
+Command Line Tic Tac Toe in Ruby
