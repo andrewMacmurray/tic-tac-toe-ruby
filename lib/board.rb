@@ -12,9 +12,9 @@ class Board
     available_tiles.map { |tile| tile.number }
   end
 
-  def make_move(tile_number, player_symbol)
+  def make_move(tile_number, player)
     tile = get_tile(tile_number) 
-    tile.player_symbol = player_symbol unless tile.nil?
+    tile.player_symbol = player.symbol unless tile.nil?
   end
 
   def is_full?
@@ -25,11 +25,11 @@ class Board
     winning_combinations.any? { |c| has_winning_combination?(c, player) }
   end
 
-  private
   def tiles
     @tiles
   end
 
+  private
   def available_tiles
     tiles.select { |tile| tile.is_empty? }
   end
@@ -37,7 +37,7 @@ class Board
   def has_winning_combination?(combination, player)
     combination.all? do |c|
       tile = get_tile(c)
-      tile.player_symbol == player
+      tile.player_symbol == player.symbol
     end
   end
 

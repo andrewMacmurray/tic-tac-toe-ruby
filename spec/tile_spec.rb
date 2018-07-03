@@ -1,6 +1,6 @@
 require "tile"
 
-RSpec.describe Tile do
+describe Tile do
   it "Returns the correct index and symbol" do
     tile = Tile.new(1, :X)
     expect(tile.number).to eq(1)

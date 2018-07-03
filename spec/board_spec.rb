@@ -1,6 +1,7 @@
 require "board"
+require "player_symbol"
 
-RSpec.describe Board do
+describe Board do
   it "lists the available moves" do
     board = Board.new(3)
     expected_moves = (1..9).to_a
@@ -10,7 +11,8 @@ RSpec.describe Board do
 
   it "marks the board with a move for a given player" do
     board = Board.new(3)
-    board.make_move(1, :X)
+    player = PlayerSymbol.new(:X)
+    board.make_move(1, player)
 
     expected_moves = (2..9).to_a
 
@@ -19,11 +21,12 @@ RSpec.describe Board do
 
   it "indicates if the board is full" do
     board = Board.new(3)
+    player = PlayerSymbol.new(:X)
 
     expect(board.is_full?).to be(false)
 
     (1..9).each do |i|
-      board.make_move(i, :X)
+      board.make_move(i, player)
     end
 
     expect(board.is_full?).to be(true)
@@ -38,9 +41,10 @@ RSpec.describe Board do
 
     winning_combinations.each do |combination|
       board = Board.new(3)
-      combination.each { |number| board.make_move(number, :X)  }
+      player = PlayerSymbol.new(:X)
+      combination.each { |number| board.make_move(number, player)  }
 
-      expect(board.has_won?(:X)).to be(true)
+      expect(board.has_won?(player)).to be(true)
     end
   end
 end
