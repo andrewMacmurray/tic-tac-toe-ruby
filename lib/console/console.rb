@@ -1,6 +1,7 @@
 class Console
   def initialize(options)
-    @output = options[:output]
+    @output   = options[:output]
+    @input    = options[:input]
     @board_ui = options[:board_ui]
     @messages = options[:messages]
   end
@@ -21,6 +22,10 @@ class Console
   def show_move_summary(move, player_symbol)
     print(messages.player_move(move, player_symbol.symbol))
     print(messages.player_turn(player_symbol.oponent))
+  end
+
+  def get_move
+    @input.gets.chomp
   end
 
   private
