@@ -1,5 +1,4 @@
 require "console/board_renderer"
-require "core/players/player_symbol"
 require "core/board"
 
 describe BoardRenderer do

@@ -1,12 +1,12 @@
 require "core/game"
 require "core/players/players"
-require "core/players/player_symbol"
+require "core/players/player"
 
 describe Game do
   it "plays a winning game correctly" do
     players = Players.new(
-      PlayerSymbol.new(:X),
-      PlayerSymbol.new(:O)
+      Player.new(:X),
+      Player.new(:O)
     ) 
     move_sequence = [1, 4, 2, 5, 3]
     board = Board.new(3)
@@ -25,8 +25,8 @@ describe Game do
 
   it "plays until a draw" do
     players = Players.new(
-      PlayerSymbol.new(:X),
-      PlayerSymbol.new(:O)
+      Player.new(:X),
+      Player.new(:O)
     )
     move_sequence = [1, 2, 3, 5, 8, 4, 6, 9, 7]
     board = Board.new(3)

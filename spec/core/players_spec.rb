@@ -1,5 +1,5 @@
 require "core/players/players"
-require "core/players/player_symbol"
+require "core/players/player"
 
 describe Players do
   it "should get the current player smymbol" do
@@ -21,6 +21,6 @@ describe Players do
   end
 
   def make_players
-    Players.new(PlayerSymbol.new(:X), PlayerSymbol.new(:O))
+    Players.new(Player.new(:X), Player.new(:O))
   end
 end

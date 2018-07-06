@@ -1,5 +1,4 @@
 require "core/board"
-require "core/players/player_symbol"
 
 describe Board do
   it "lists the available moves" do

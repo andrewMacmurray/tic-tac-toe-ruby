@@ -1,4 +1,4 @@
-class PlayerSymbol
+class Player
   attr_reader :symbol
 
   def initialize(player_symbol)
