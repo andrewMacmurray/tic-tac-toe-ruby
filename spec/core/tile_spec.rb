@@ -1,4 +1,4 @@
-require "tile"
+require "core/tile"
 
 describe Tile do
   it "Returns the correct index and symbol" do
@@ -7,7 +7,7 @@ describe Tile do
     expect(tile.player_symbol).to eq(:X)
   end
 
-  it "Returns nil if no player symbol is given" do
+  it "Returns empty if no player symbol is given" do
     tile = Tile.new(1)
     expect(tile.player_symbol).to eq(:empty)
   end

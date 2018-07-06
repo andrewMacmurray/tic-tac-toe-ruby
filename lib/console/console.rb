@@ -1,9 +1,10 @@
+require "console/messages"
+require "console/board_renderer"
+
 class Console
   def initialize(options)
-    @output   = options[:output]
-    @input    = options[:input]
-    @board_ui = options[:board_ui]
-    @messages = options[:messages]
+    @input = options[:input]
+    @output = options[:output]
   end
 
   def greet_user
@@ -14,30 +15,51 @@ class Console
     messages.options.each { |option| print(option) }
   end
 
-  def print_board(board)
-    board_string = board_ui.render(board)
+  def show_instructions(player)
+    print(messages.instructions(player))
+  end
+
+  def show_board(board)
+    board_string = board_renderer.render(board)
     print(board_string)
   end
 
-  def show_move_summary(move, player_symbol)
-    print(messages.player_move(move, player_symbol.symbol))
-    print(messages.player_turn(player_symbol.oponent))
+  def show_move_summary(move, player, oponent)
+    print(messages.player_move(move, player))
+    print(messages.player_turn(oponent))
+  end
+
+  def show_win(player)
+    print(messages.player_win(player))
+  end
+
+  def show_draw
+    print(messages.draw)
   end
 
   def get_move
-    @input.gets.chomp
+    input.gets.chomp.to_r
+  end
+
+  def clear
+    print(`clear`)
   end
 
   private
+  attr_reader :board_renderer
+  attr_reader :messages
+  attr_reader :output
+  attr_reader :input
+
   def print(message)
-    @output.puts(message)
+    output.puts(message)
   end
 
-  def board_ui
-    @board_ui
+  def board_renderer        
+    BoardRenderer.new
   end
 
   def messages
-    @messages
+    Messages.new
   end
 end

@@ -1,4 +1,4 @@
-require "player_symbol"
+require "core/players/player_symbol"
 
 describe PlayerSymbol do
   it "indicates the player symbol" do

@@ -1,5 +1,5 @@
-require "board"
-require "player_symbol"
+require "core/board"
+require "core/players/player_symbol"
 
 describe Board do
   it "lists the available moves" do
@@ -11,8 +11,7 @@ describe Board do
 
   it "marks the board with a move for a given player" do
     board = Board.new(3)
-    player = PlayerSymbol.new(:X)
-    board.make_move(1, player)
+    board.make_move(1, :X)
 
     expected_moves = (2..9).to_a
 
@@ -21,12 +20,11 @@ describe Board do
 
   it "indicates if the board is full" do
     board = Board.new(3)
-    player = PlayerSymbol.new(:X)
 
     expect(board.is_full?).to be(false)
 
     (1..9).each do |i|
-      board.make_move(i, player)
+      board.make_move(i, :X)
     end
 
     expect(board.is_full?).to be(true)
@@ -41,10 +39,9 @@ describe Board do
 
     winning_combinations.each do |combination|
       board = Board.new(3)
-      player = PlayerSymbol.new(:X)
-      combination.each { |number| board.make_move(number, player)  }
+      combination.each { |number| board.make_move(number, :X)  }
 
-      expect(board.has_won?(player)).to be(true)
+      expect(board.has_won?(:X)).to be(true)
     end
   end
 end

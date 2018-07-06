@@ -11,11 +11,23 @@ class Messages
     ]
   end
 
+  def instructions(player)
+    "Ok player #{player} enter a number from 1-9"
+  end
+
   def player_move(move, player)
     "Player #{player} took tile #{move}"
   end
 
   def player_turn(player)
     "Your turn player #{player}"
+  end
+
+  def player_win(player)
+    "Player #{player} won!"
+  end
+
+  def draw
+    "It's a draw!"
   end
 end

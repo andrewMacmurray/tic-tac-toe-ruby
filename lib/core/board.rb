@@ -1,7 +1,8 @@
-require "tile"
+require "core/tile"
 
 class Board
   attr_reader :board_size
+  attr_reader :tiles
 
   def initialize(board_size = 3) 
     @board_size = board_size
@@ -12,21 +13,21 @@ class Board
     available_tiles.map { |tile| tile.number }
   end
 
-  def make_move(tile_number, player)
+  def make_move(tile_number, player_symbol)
     tile = get_tile(tile_number) 
-    tile.player_symbol = player.symbol unless tile.nil?
+    tile.player_symbol = player_symbol unless tile.nil?
+  end
+
+  def is_terminal?
+    is_full? || has_won?(:X) || has_won?(:O)
   end
 
   def is_full?
     tiles.all? { |t| !t.is_empty? }
   end
 
-  def has_won?(player)
-    winning_combinations.any? { |c| has_winning_combination?(c, player) }
-  end
-
-  def tiles
-    @tiles
+  def has_won?(player_symbol)
+    winning_combinations.any? { |c| has_winning_combination?(c, player_symbol) }
   end
 
   private
@@ -34,10 +35,10 @@ class Board
     tiles.select { |tile| tile.is_empty? }
   end
 
-  def has_winning_combination?(combination, player)
+  def has_winning_combination?(combination, player_symbol)
     combination.all? do |c|
       tile = get_tile(c)
-      tile.player_symbol == player.symbol
+      tile.player_symbol == player_symbol
     end
   end
 

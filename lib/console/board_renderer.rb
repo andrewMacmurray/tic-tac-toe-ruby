@@ -1,9 +1,10 @@
-class BoardUI
+class BoardRenderer
   def render(board)
     tile_strings = board.tiles.map { |tile| tile.to_s }
     lines(tile_strings).join("\n")
   end
 
+  private
   def line_to_s(line)
     line.join(" | ")
   end

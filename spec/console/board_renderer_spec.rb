@@ -1,11 +1,11 @@
-require "console/board_ui"
-require "player_symbol"
-require "board"
+require "console/board_renderer"
+require "core/players/player_symbol"
+require "core/board"
 
-describe BoardUI do
+describe BoardRenderer do
   it "should turn a board into renderable lines" do
     board = Board.new(3)
-    board_ui = BoardUI.new
+    board_renderer = BoardRenderer.new
 
     expected_lines = [
       "1 | 2 | 3",
@@ -13,14 +13,14 @@ describe BoardUI do
       "7 | 8 | 9"
     ].join("\n")
 
-    actual_lines = board_ui.render(board)
+    actual_lines = board_renderer.render(board)
     expect(actual_lines).to eq(expected_lines)
   end
 
   it "should render player moves correctly on a board" do
-    board_ui = BoardUI.new
-    player_1 = PlayerSymbol.new(:X)
-    player_2 = PlayerSymbol.new(:O)
+    board_renderer = BoardRenderer.new
+    player_1 = :X
+    player_2 = :O 
 
 
     board = Board.new(3)
@@ -33,7 +33,7 @@ describe BoardUI do
       "7 | 8 | 9"
     ].join("\n")
 
-    actual_lines = board_ui.render(board)
+    actual_lines = board_renderer.render(board)
     expect(actual_lines).to eq(expected_lines)
   end
 end
