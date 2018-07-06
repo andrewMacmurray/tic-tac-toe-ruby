@@ -3,7 +3,7 @@ require "core/board"
 
 describe BoardRenderer do
   it "should turn a board into renderable lines" do
-    board = Board.new(3)
+    board = Board.new
     board_renderer = BoardRenderer.new
 
     expected_lines = [
@@ -22,7 +22,7 @@ describe BoardRenderer do
     player_2 = :O 
 
 
-    board = Board.new(3)
+    board = Board.new
     board.make_move(1, player_1)
     board.make_move(3, player_2)
 

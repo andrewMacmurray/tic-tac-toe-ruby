@@ -10,7 +10,7 @@ require "core/game"
 
 console = Console.new(input: $stdin, output: $stdout)
 players = Players.new(PlayerSymbol.new(:X), PlayerSymbol.new(:O))
-board   = Board.new(3)
+board   = Board.new
 game    = Game.new(board: board, players: players, ui: console)
 
 game.play

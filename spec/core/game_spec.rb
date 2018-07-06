@@ -9,7 +9,7 @@ describe Game do
       Player.new(:O)
     ) 
     move_sequence = [1, 4, 2, 5, 3]
-    board = Board.new(3)
+    board = Board.new
     ui = ui_spy(move_sequence)
     game = Game.new(
       board: board,
@@ -29,7 +29,7 @@ describe Game do
       Player.new(:O)
     )
     move_sequence = [1, 2, 3, 5, 8, 4, 6, 9, 7]
-    board = Board.new(3)
+    board = Board.new
     ui = ui_spy(move_sequence)
     game = Game.new(
       board: board,

@@ -52,7 +52,7 @@ describe Console do
   end
 
   it "shows a given board" do
-    board = Board.new(3)
+    board = Board.new
 
     output = build_output
     console = build_console(output)
