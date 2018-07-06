@@ -1,5 +1,7 @@
 # Tic Tac Toe Ruby
 
+https://travis-ci.org/andrewMacmurray/tic-tac-toe-ruby.svg?branch=master
+
 Command Line Tic Tac Toe in Ruby
 
 ## Get up and running
@@ -16,10 +18,8 @@ Run the tests with
 > bundle exec rspec
 ```
 
-Or you can run the tests in the background with guard
+Run the application with
 
 ```
-> bundle exec guard
+> bin/console
 ```
-
-Guard will re-run the tests if any changes are saved in `lib` or `spec`
