@@ -8,7 +8,7 @@ require "core/players/player_symbol"
 require "core/board"
 require "core/game"
 
-console = Console.new(input: $stdin, output: $stdout)
+console = Console.new
 players = Players.new(PlayerSymbol.new(:X), PlayerSymbol.new(:O))
 board   = Board.new
 game    = Game.new(board: board, players: players, ui: console)

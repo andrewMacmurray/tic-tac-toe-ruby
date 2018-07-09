@@ -3,8 +3,10 @@ require "console/board_renderer"
 
 class Console
   def initialize(options)
-    @input = options[:input]
-    @output = options[:output]
+    @input = options[:input] || $stdin
+    @output = options[:output] || $stdout
+    @board_renderer ||= BoardRenderer.new
+    @messages ||= Messages.new
   end
 
   def greet_user
@@ -46,20 +48,9 @@ class Console
   end
 
   private
-  attr_reader :board_renderer
-  attr_reader :messages
-  attr_reader :output
-  attr_reader :input
+  attr_reader :board_renderer, :messages, :output, :input
 
   def print(message)
     output.puts(message)
-  end
-
-  def board_renderer        
-    BoardRenderer.new
-  end
-
-  def messages
-    Messages.new
   end
 end

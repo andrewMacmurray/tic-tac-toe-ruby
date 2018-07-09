@@ -16,7 +16,7 @@ class Game
   attr_accessor :board
 
   def play_round
-    while !board.is_terminal? do
+    while !board.terminus_reached? do
       next_move = ui.get_move
       play_move(next_move)
     end    

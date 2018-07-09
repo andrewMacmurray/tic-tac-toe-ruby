@@ -19,7 +19,7 @@ describe Game do
 
     game.play
 
-    expect(board.is_terminal?).to be(true)
+    expect(board.terminus_reached?).to be(true)
     expect(board.has_won?(:X)).to be(true)
   end
 
@@ -39,7 +39,7 @@ describe Game do
 
     game.play
 
-    expect(board.is_terminal?).to be(true)
+    expect(board.terminus_reached?).to be(true)
     expect(board.is_full?).to be(true)
   end
 
