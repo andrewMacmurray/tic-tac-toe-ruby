@@ -16,8 +16,7 @@ describe Console do
     move = console.request_move(board, :X, :O)
 
     expected_output = [
-      clear_sequence,
-      board_renderer.render(board.make_move(3, :X)),
+      clear_sequence + board_renderer.render(board.make_move(3, :X)),
       messages.player_move(3, :X),
       messages.player_turn(:O)
     ].join("\n") + "\n"
@@ -34,8 +33,7 @@ describe Console do
     move = console.request_move(board, 3, :O)
 
     expected_output = [
-      clear_sequence,
-      board_renderer.render(board),
+      clear_sequence + board_renderer.render(board),
       messages.already_taken(move)
     ].join("\n") + "\n"
 
@@ -55,8 +53,7 @@ describe Console do
     console.game_summary(board)
 
     expected_output = [
-      clear_sequence,
-      board_renderer.render(board),
+      clear_sequence + board_renderer.render(board),
       messages.player_win(:X)
     ].join("\n") + "\n"
 
@@ -71,8 +68,7 @@ describe Console do
     console.game_summary(board) 
 
     expected_output = [
-      clear_sequence,
-      board_renderer.render(board),
+      clear_sequence + board_renderer.render(board),
       messages.draw
     ].join("\n") + "\n"
 

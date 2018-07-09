@@ -6,13 +6,13 @@ describe BoardRenderer do
     board = Board.new
     board_renderer = BoardRenderer.new
 
+    actual_lines = board_renderer.render(board)
     expected_lines = [
       "1 | 2 | 3",
       "4 | 5 | 6",
       "7 | 8 | 9"
     ].join("\n")
 
-    actual_lines = board_renderer.render(board)
     expect(actual_lines).to eq(expected_lines)
   end
 
@@ -26,13 +26,13 @@ describe BoardRenderer do
       .make_move(1, player_1)
       .make_move(3, player_2)
 
+    actual_lines = board_renderer.render(board)
     expected_lines = [
       "X | 2 | O",
       "4 | 5 | 6",
       "7 | 8 | 9"
     ].join("\n")
 
-    actual_lines = board_renderer.render(board)
     expect(actual_lines).to eq(expected_lines)
   end
 end

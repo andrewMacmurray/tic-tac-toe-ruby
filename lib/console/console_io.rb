@@ -1,8 +1,12 @@
 class ConsoleIO
-  def initialize(options)
-    @input = options[:input]
-    @output = options[:output]
+  def initialize(options = {})
+    @input = options[:input] || $stdin
+    @output = options[:output] || $stdout
     @error_message = "Sorry I didn't recognise that"
+  end
+
+  def clear
+    output.print(`clear`)
   end
 
   def puts(message)

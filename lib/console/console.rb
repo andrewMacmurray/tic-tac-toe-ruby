@@ -4,18 +4,20 @@ require "console/board_renderer"
 class Console
   def initialize(io)
     @io = io
+    @board_renderer ||= BoardRenderer.new
+    @messages ||= Messages.new
   end
   
   def request_move(board, player, oponent)
     move = get_move
-    clear
+    io.clear
     print_board_with_move(move, board, player)
     print_move_summary(move, player, oponent, board)
     move
   end
 
   def game_summary(board)
-    clear
+    io.clear
     print_board(board)
     print_terminus(board)
   end
@@ -25,9 +27,7 @@ class Console
   end
 
   private
-  attr_reader :board_renderer
-  attr_reader :messages
-  attr_reader :io
+  attr_reader :board_renderer, :messages, :io
 
   def print_board_with_move(move, board, player)
     if board.valid_move?(move)
@@ -69,19 +69,7 @@ class Console
     io.read_int_in_range(1, 9)
   end
 
-  def clear
-    print(`clear`)
-  end
-
   def print(message)
     io.puts(message)
-  end
-
-  def board_renderer        
-    BoardRenderer.new
-  end
-
-  def messages
-    Messages.new
   end
 end

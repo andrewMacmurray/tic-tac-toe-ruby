@@ -28,16 +28,18 @@ class Board
     end
   end
 
-  def terminal?
+  def terminus_reached?
     full? || has_won?(:X) || has_won?(:O)
   end
 
   def full?
-    tiles.all? { |t| !t.is_empty? }
+    tiles.all? { |tile| !tile.is_empty? }
   end
 
   def has_won?(player_symbol)
-    winning_combinations.any? { |c| has_winning_combination?(c, player_symbol) }
+    winning_combinations.any? do |combination|
+      has_winning_combination?(combination, player_symbol)
+    end
   end
 
   private
@@ -46,14 +48,14 @@ class Board
   end
 
   def has_winning_combination?(combination, player_symbol)
-    combination.all? do |c|
-      tile = get_tile(c, tiles)
+    combination.all? do |tile_number|
+      tile = get_tile(tile_number, tiles)
       tile.player_symbol == player_symbol
     end
   end
 
-  def get_tile(tile_number, ts)
-    ts.find { |t| t.number == tile_number }
+  def get_tile(tile_number, tiles)
+    tiles.find { |tile| tile.number == tile_number }
   end
 
   def winning_combinations

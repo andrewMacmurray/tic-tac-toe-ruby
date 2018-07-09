@@ -9,7 +9,7 @@ require "core/players/player"
 require "core/board"
 require "core/game"
 
-io      = ConsoleIO.new(input: $stdin, output: $stdout)
+io      = ConsoleIO.new
 console = Console.new(io)
 players = Players.new(Player.new(:X), Player.new(:O))
 board   = Board.new
