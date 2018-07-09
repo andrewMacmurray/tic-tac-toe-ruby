@@ -19,6 +19,10 @@ class Messages
     "Player #{player} took tile #{move}"
   end
 
+  def already_taken(move_index)
+    "Tile #{move_index} has already been taken!"
+  end
+
   def player_turn(player)
     "Your turn player #{player}"
   end

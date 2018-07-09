@@ -6,105 +6,87 @@ require "core/board"
 describe Console do
   let(:messages) { Messages.new }
   let(:board_renderer) { BoardRenderer.new }
+  let(:clear_sequence) { "\e[H\e[2J" }
 
-  it "greets the user" do
+  it "requests a move from a player and renders its result" do
     output = build_output
-    console = build_console(output)
+    console = build_console_with_input("3", output)
+    board = Board.new
 
-    console.greet_user
-    
-    expected_output = messages.greet_user + "\n"
-    expect(output.string).to eq(expected_output)
-  end
-
-  it "shows the game options to the user" do
-    output = build_output
-    console = build_console(output)
-
-    console.show_options
-
-    expected_output = messages.options.join("\n") + "\n"
-    expect(output.string).to eq(expected_output)
-  end
-
-  it "shows a summary for a given move" do
-    output = build_output
-    console = build_console(output)
-
-    console.show_move_summary(1, :X, :O)
+    move = console.request_move(board, :X, :O)
 
     expected_output = [
-      messages.player_move(1, :X),
+      clear_sequence,
+      board_renderer.render(board.make_move(3, :X)),
+      messages.player_move(3, :X),
       messages.player_turn(:O)
+    ].join("\n") + "\n"
+
+    expect(move).to eq(3)
+    expect(output.string).to eq(expected_output)
+  end
+
+  it "renders the result of an invalid move" do
+    output  = build_output
+    console = build_console_with_input("3", output)
+    board = Board.new.make_move(3, :X)
+
+    move = console.request_move(board, 3, :O)
+
+    expected_output = [
+      clear_sequence,
+      board_renderer.render(board),
+      messages.already_taken(move)
+    ].join("\n") + "\n"
+
+    expect(move).to eq(3)
+    expect(output.string).to eq(expected_output)
+  end
+
+  it "displays the result of a winning game" do
+    output = build_output
+    console = build_console(output)
+
+    board = Board.new
+      .make_move(1, :X)
+      .make_move(2, :X)
+      .make_move(3, :X)
+
+    console.game_summary(board)
+
+    expected_output = [
+      clear_sequence,
+      board_renderer.render(board),
+      messages.player_win(:X)
     ].join("\n") + "\n"
 
     expect(output.string).to eq(expected_output)
   end
 
-  it "instructs the user to enter a number" do
+  it "displays the result of a draw" do
     output = build_output
     console = build_console(output)
+    board = build_draw_board
 
-    console.show_instructions(:X)
+    console.game_summary(board) 
 
-    expected_output = messages.instructions(:X) + "\n"
-    expect(output.string).to eq(expected_output)
-  end
+    expected_output = [
+      clear_sequence,
+      board_renderer.render(board),
+      messages.draw
+    ].join("\n") + "\n"
 
-  it "shows a given board" do
-    board = Board.new
-
-    output = build_output
-    console = build_console(output)
-    console.show_board(board)
-
-    expected_output = board_renderer.render(board) + "\n"
-    expect(output.string).to eq(expected_output) 
-  end
-
-  it "gets a move from the user" do
-    console = build_console_with_input("3", build_output)
-
-    move = console.get_move
-    expect(move).to eq(3)
-  end
-
-  it "prints message for a player win" do
-    output = build_output
-    console = build_console(output)
-
-    console.show_win(:X)
-
-    expected_output = messages.player_win(:X) + "\n"
-    expect(output.string).to eq(expected_output)
-  end
-
-  it "prints message for draw" do
-    output = build_output
-    console = build_console(output)
-
-    console.show_draw
-
-    expected_output = messages.draw + "\n"
     expect(output.string).to eq(expected_output)
   end
 
   def build_console(output)
-    Console.new(
-      input: empty_input,
-      output: output
-    )
+    console_io = ConsoleIO.new(input: StringIO.new, output: output)
+    Console.new(console_io)
   end
 
   def build_console_with_input(input_value, output)
-    Console.new(
-      input: build_input(input_value),
-      output: output
-    )
-  end
-
-  def empty_input
-    StringIO.new
+    console_io = ConsoleIO.new(input: build_input(input_value), output: output)
+    Console.new(console_io)
   end
 
   def build_input(input)
@@ -113,5 +95,18 @@ describe Console do
 
   def build_output
     StringIO.new
+  end
+
+  def build_draw_board
+    board = Board.new
+    players = Players.new(Player.new(:X), Player.new(:O))
+    draw_sequence = [1, 2, 3, 5, 8, 4, 6, 9, 7]
+
+    draw_sequence.each do |move|
+      board = board.make_move(move, players.current_player_symbol)
+      players.switch
+    end
+
+    board
   end
 end

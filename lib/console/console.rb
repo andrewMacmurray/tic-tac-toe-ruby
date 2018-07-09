@@ -2,57 +2,79 @@ require "console/messages"
 require "console/board_renderer"
 
 class Console
-  def initialize(options)
-    @input = options[:input]
-    @output = options[:output]
+  def initialize(io)
+    @io = io
+  end
+  
+  def request_move(board, player, oponent)
+    move = get_move
+    clear
+    print_board_with_move(move, board, player)
+    print_move_summary(move, player, oponent, board)
+    move
+  end
+
+  def game_summary(board)
+    clear
+    print_board(board)
+    print_terminus(board)
   end
 
   def greet_user
     print(messages.greet_user)
   end
 
-  def show_options
-    messages.options.each { |option| print(option) }
+  private
+  attr_reader :board_renderer
+  attr_reader :messages
+  attr_reader :io
+
+  def print_board_with_move(move, board, player)
+    if board.valid_move?(move)
+      print_board(board.make_move(move, player))
+    else
+      print_board(board)
+    end
   end
 
-  def show_instructions(player)
-    print(messages.instructions(player))
-  end
-
-  def show_board(board)
+  def print_board(board)
     board_string = board_renderer.render(board)
     print(board_string)
   end
 
-  def show_move_summary(move, player, oponent)
-    print(messages.player_move(move, player))
-    print(messages.player_turn(oponent))
+  def print_terminus(board)
+    print_draw    if board.full?
+    print_win(:X) if board.has_won?(:X)
+    print_win(:O) if board.has_won?(:O)
   end
 
-  def show_win(player)
+  def print_move_summary(move, player, oponent, board)
+    if board.valid_move?(move)
+      print(messages.player_move(move, player))
+      print(messages.player_turn(oponent))
+    else
+      print(messages.already_taken(move))
+    end
+  end
+
+  def print_win(player)
     print(messages.player_win(player))
   end
 
-  def show_draw
+  def print_draw
     print(messages.draw)
   end
 
   def get_move
-    input.gets.chomp.to_r
+    io.read_int_in_range(1, 9)
   end
 
   def clear
     print(`clear`)
   end
 
-  private
-  attr_reader :board_renderer
-  attr_reader :messages
-  attr_reader :output
-  attr_reader :input
-
   def print(message)
-    output.puts(message)
+    io.puts(message)
   end
 
   def board_renderer        

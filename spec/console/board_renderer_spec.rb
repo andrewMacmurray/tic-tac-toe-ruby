@@ -23,8 +23,8 @@ describe BoardRenderer do
 
 
     board = Board.new
-    board.make_move(1, player_1)
-    board.make_move(3, player_2)
+      .make_move(1, player_1)
+      .make_move(3, player_2)
 
     expected_lines = [
       "X | 2 | O",

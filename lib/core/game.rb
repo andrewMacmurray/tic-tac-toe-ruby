@@ -16,34 +16,27 @@ class Game
   attr_accessor :board
 
   def play_round
-    while !board.is_terminal? do
-      next_move = ui.get_move
-      play_move(next_move)
+    while !board.terminal? do
+      eval_move!
     end    
-    game_summary
+    ui.game_summary(board)
   end
 
-  def play_move(move)
-    ui.clear
-    make_move(move)
-    move_summary(move)
-    players.switch
+  def eval_move!
+    move = request_move
+    if board.valid_move?(move)
+      make_move!(move)
+    end
   end
 
-  def make_move(move)
-    board.make_move(move, players.current_player_symbol)
-    ui.show_board(board)
-  end
-
-  def move_summary(move)
+  def request_move
     player  = players.current_player_symbol
     oponent = players.current_oponent_symbol
-    ui.show_move_summary(move, player, oponent)
+    ui.request_move(board, player, oponent)
   end
 
-  def game_summary
-    ui.show_draw    if board.is_full?
-    ui.show_win(:X) if board.has_won?(:X)
-    ui.show_win(:O) if board.has_won?(:O)
+  def make_move!(move)
+    @board = board.make_move(move, players.current_player_symbol)
+    @players.switch
   end
 end
