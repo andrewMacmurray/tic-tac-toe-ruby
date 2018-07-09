@@ -1,13 +1,16 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
 
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
+require "console/console"
+require "core/players/players"
+require "core/players/player_symbol"
+require "core/board"
+require "core/game"
 
-# (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
-# Pry.start
+console = Console.new
+players = Players.new(PlayerSymbol.new(:X), PlayerSymbol.new(:O))
+board   = Board.new
+game    = Game.new(board: board, players: players, ui: console)
 
-require "irb"
-IRB.start(__FILE__)
+game.play
