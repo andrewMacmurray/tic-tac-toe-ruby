@@ -7,6 +7,17 @@ class Console
     @board_renderer ||= BoardRenderer.new
     @messages ||= Messages.new
   end
+
+  def game_choice
+    messages.options.each { |option| print(option) }
+    io.print(messages.prompt)
+    io.read_int_in_range(1, 3)
+  end
+
+  def game_instructions(player)
+    print(messages.instructions(player))
+    prompt
+  end
   
   def request_move(board = nil)
     get_move
@@ -16,6 +27,7 @@ class Console
     io.clear
     print_board_with_move(move, board, player)
     print_move_summary(move, player, oponent, board)
+    prompt
   end
 
   def game_summary(board)
@@ -56,6 +68,10 @@ class Console
     else
       print(messages.already_taken(move))
     end
+  end
+
+  def prompt
+    @io.print(messages.prompt)
   end
 
   def print_win(player)

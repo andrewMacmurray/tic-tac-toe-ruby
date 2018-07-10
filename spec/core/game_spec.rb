@@ -6,13 +6,28 @@ require "console/console"
 require "console/console_io"
 
 describe Game do
-  it "plays a winning game correctly" do
+  it "requests a player option from the user" do
     ui = ui_stub
-    players = players_stub([1, 4, 2, 5, 3], ui)
+    players_factory = factory_stub([1, 4, 2, 5, 3], ui)
 
     game = Game.new(
       board: Board.new,
-      players: players,
+      players_factory: players_factory,
+      ui: ui
+    )
+
+    expect(players_factory).to receive(:create).once.with(1)
+
+    game.play
+  end
+
+  it "plays a winning game correctly" do
+    ui = ui_stub
+    players = factory_stub([1, 4, 2, 5, 3], ui)
+
+    game = Game.new(
+      board: Board.new,
+      players_factory: players,
       ui: ui
     )
 
@@ -24,11 +39,11 @@ describe Game do
 
   it "plays until a draw" do
     ui = ui_stub
-    players = players_stub([1, 2, 3, 5, 8, 4, 6, 9, 7], ui)
+    players = factory_stub([1, 2, 3, 5, 8, 4, 6, 9, 7], ui)
 
     game = Game.new(
       board: Board.new,
-      players: players,
+      players_factory: players,
       ui: ui
     )
 
@@ -39,10 +54,16 @@ describe Game do
   end
 
   def ui_stub
-    ui = Console.new(ConsoleIO.new(input: StringIO.new, output: StringIO.new))
+    ui = Console.new(ConsoleIO.new(input: StringIO.new("1"), output: StringIO.new))
     allow(ui).to receive(:print_win)
     allow(ui).to receive(:print_draw)
     ui
+  end
+
+  def factory_stub(move_sequence, ui)
+    factory = PlayersFactory.new(ui)
+    allow(factory).to receive(:create) { players_stub(move_sequence, ui) }
+    factory
   end
 
   def players_stub(move_sequence, ui)

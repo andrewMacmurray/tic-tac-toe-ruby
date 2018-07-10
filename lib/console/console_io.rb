@@ -1,8 +1,10 @@
+require "console/messages"
+
 class ConsoleIO
   def initialize(options = {})
     @input = options[:input] || $stdin
     @output = options[:output] || $stdout
-    @error_message = "Sorry I didn't recognise that"
+    @messages = options[:messages] || Messages.new
   end
 
   def clear
@@ -13,12 +15,17 @@ class ConsoleIO
     output.puts(message)
   end
 
+  def print(message)
+    output.print(message)
+  end
+
   def read_int_in_range(from, to)
     val = get_next
     if valid_digit?(val) && in_range?(val, from, to)
       val.to_i
     else
-      self.puts(error_message)
+      puts(messages.unrecognised)
+      print(messages.prompt)
       read_int_in_range(from, to)
     end
   end
@@ -26,7 +33,7 @@ class ConsoleIO
   private
   attr_reader :input
   attr_reader :output
-  attr_reader :error_message
+  attr_reader :messages
 
   def get_next
     input.gets

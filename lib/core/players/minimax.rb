@@ -11,11 +11,11 @@ class Minimax
 
   private
   def scores(board)
-    xs = board.available_moves.map do |move|
+    move_scores = board.available_moves.map do |move|
       next_board = board.make_move(move, @oponent)
       [move, minimax(next_board)]
     end
-    xs.max_by { |x| x[1] }
+    move_scores.max_by { |x| x[1] }
   end
 
   def minimax(board)
@@ -23,36 +23,26 @@ class Minimax
   end
 
   def minimize(board, depth)
-    if board.terminus_reached? || depth == @max_depth
-      heuristic_value(board, depth)
-    else
-      xs = board.available_moves.map do |move|
-        next_board = board.make_move(move, @oponent)
-        maximize(next_board, depth + 1)
-      end
-      xs.min
-    end
+    return heuristic_value(board, depth) if terminus?(board, depth) 
+    next_states(board, @oponent).map { |next_board| maximize(next_board, depth + 1) }.min
   end
 
   def maximize(board, depth)
-    if board.terminus_reached? || depth == @max_depth
-      heuristic_value(board, depth)
-    else
-      xs = board.available_moves.map do |move|
-        next_board = board.make_move(move, @player)
-        minimize(next_board, depth + 1)
-      end
-      xs.max
-    end
+    return heuristic_value(board, depth) if terminus?(board, depth) 
+    next_states(board, @player).map { |next_board| minimize(next_board, depth + 1) }.max
+  end
+
+  def terminus?(board, depth)
+    board.terminus_reached? || depth == @max_depth
+  end
+
+  def next_states(board, player)
+    board.available_moves.map { |move| board.make_move(move, player) }
   end
 
   def heuristic_value(board, depth)
-    if board.has_won?(@player)
-      depth
-    elsif board.has_won?(@oponent)
-      -depth
-    else
-      0
-    end
+    return depth  if board.has_won?(@player)
+    return -depth if board.has_won?(@oponent)
+    return 0
   end
 end

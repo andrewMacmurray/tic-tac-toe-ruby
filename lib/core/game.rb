@@ -1,12 +1,13 @@
 class Game
   def initialize(options)
     @board = options[:board]
-    @players = options[:players]
+    @players_factory = options[:players_factory]
     @ui = options[:ui]
   end
 
   def play
     ui.greet_user
+    game_choice!
     play_round
   end
 
@@ -14,6 +15,12 @@ class Game
   attr_reader :players
   attr_reader :ui
   attr_accessor :board
+
+  def game_choice!
+    option   = ui.game_choice
+    @players = @players_factory.create(option)
+    ui.game_instructions(@players.current_player_symbol)
+  end
 
   def play_round
     while !board.terminus_reached? do
@@ -32,7 +39,7 @@ class Game
   def request_move
     player  = players.current_player_symbol
     oponent = players.current_oponent_symbol
-    move = players.request_move(board)
+    move    = players.request_move(board)
     ui.move_summary(move, board, player, oponent)
     move
   end

@@ -10,6 +10,13 @@ describe ComputerPlayer do
     expect(player.symbol).to eq(:X)
   end
 
+  it "takes top left corner if not already taken" do
+    player = ComputerPlayer.new(:X)
+    board = Board.new
+
+    expect(player.request_move(board)).to eq(1)
+  end
+
   it "request move via minimax" do
     player = ComputerPlayer.new(:X)
     board = Board.new

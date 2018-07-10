@@ -29,8 +29,23 @@ describe Console do
     expected_output = [
       clear_sequence + board_renderer.render(board.make_move(3, :X)),
       messages.player_move(3, :X),
-      messages.player_turn(:O)
-    ].join("\n") + "\n"
+      messages.player_turn(:O),
+      messages.prompt
+    ].join("\n") 
+
+    expect(output.string).to eq(expected_output)
+  end
+
+  it "instructs user to enter a number" do
+    output = build_output
+    console = build_console(output)
+
+    console.game_instructions(:X) 
+
+    expected_output = [
+      messages.instructions(:X),
+      messages.prompt
+    ].join("\n")
 
     expect(output.string).to eq(expected_output)
   end
@@ -44,8 +59,9 @@ describe Console do
 
     expected_output = [
       clear_sequence + board_renderer.render(board),
-      messages.already_taken(3)
-    ].join("\n") + "\n"
+      messages.already_taken(3),
+      messages.prompt
+    ].join("\n") 
 
     expect(output.string).to eq(expected_output)
   end
@@ -82,6 +98,29 @@ describe Console do
     ].join("\n") + "\n"
 
     expect(output.string).to eq(expected_output)
+  end
+
+  it "prompts user for game choice" do
+    output = build_output
+    console = build_console(output, StringIO.new("1"))
+
+    choice = console.game_choice
+
+    lines = messages.options.concat([messages.prompt])
+    expected_output = lines.join("\n")
+
+    expect(choice).to eq(1)
+    expect(output.string).to eq(expected_output)
+  end
+
+  it "retries until it valid game option received" do
+    output = build_output
+    console = build_console(output, StringIO.new("blah\n9\n3"))
+
+    choice = console.game_choice
+
+    expect(choice).to eq(3)
+    expect(output.string).to include(messages.unrecognised)
   end
 
   def build_console(output, input = StringIO.new)

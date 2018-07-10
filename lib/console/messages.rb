@@ -11,6 +11,10 @@ class Messages
     ]
   end
 
+  def prompt() "> " end
+
+  def unrecognised() "Sorry I didn't recognise that" end
+
   def instructions(player)
     "Ok player #{player} enter a number from 1-9"
   end

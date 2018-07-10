@@ -3,10 +3,9 @@ require "console/console_io"
 describe ConsoleIO do
   let(:error_message) { "Sorry I didn't recognise that" }
 
-  it "prints a message to the screen" do
-    input = StringIO.new
+  it "prints messages to the screen" do
     output = StringIO.new
-    console_io = ConsoleIO.new(input: input, output: output)
+    console_io = ConsoleIO.new(output: output)
     console_io.puts("hello")
 
     expect(output.string).to eq("hello\n")
