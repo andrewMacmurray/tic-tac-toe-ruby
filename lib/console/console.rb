@@ -9,9 +9,9 @@ class Console
   end
 
   def game_choice
-    messages.options.each { |option| print(option) }
-    io.print(messages.prompt)
-    io.read_int_in_range(1, 3)
+    print_options
+    prompt
+    get_game_choice
   end
 
   def game_instructions(player)
@@ -24,14 +24,14 @@ class Console
   end
 
   def move_summary(move, board, player, oponent)
-    io.clear
+    clear_screen
     print_board_with_move(move, board, player)
     print_move_summary(move, player, oponent, board)
     prompt
   end
 
   def game_summary(board)
-    io.clear
+    clear_screen
     print_board(board)
     print_terminus(board)
   end
@@ -70,8 +70,16 @@ class Console
     end
   end
 
+  def print_options
+    messages.options.each { |option| print(option) }
+  end
+
+  def clear_screen
+    io.clear
+  end
+
   def prompt
-    @io.print(messages.prompt)
+    io.print(messages.prompt)
   end
 
   def print_win(player)
@@ -84,6 +92,10 @@ class Console
 
   def get_move
     io.read_int_in_range(1, 9)
+  end
+
+  def get_game_choice
+    io.read_int_in_range(1, 3)
   end
 
   def print(message)
