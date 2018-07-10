@@ -5,13 +5,17 @@ $: << File.join(File.dirname(__FILE__), '..', 'lib')
 require "console/console"
 require "console/console_io"
 require "core/players/players"
-require "core/players/player"
+require "core/players/human_player"
+require "core/players/computer_player"
 require "core/board"
 require "core/game"
 
 io      = ConsoleIO.new
 console = Console.new(io)
-players = Players.new(Player.new(:X), Player.new(:O))
+players = Players.new(
+  HumanPlayer.new(:X, console),
+  ComputerPlayer.new(:O)
+)
 board   = Board.new
 game    = Game.new(board: board, players: players, ui: console)
 

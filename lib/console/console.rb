@@ -8,12 +8,14 @@ class Console
     @messages ||= Messages.new
   end
   
-  def request_move(board, player, oponent)
-    move = get_move
+  def request_move(board = nil)
+    get_move
+  end
+
+  def move_summary(move, board, player, oponent)
     io.clear
     print_board_with_move(move, board, player)
     print_move_summary(move, player, oponent, board)
-    move
   end
 
   def game_summary(board)
@@ -28,7 +30,6 @@ class Console
 
   private
   attr_reader :board_renderer, :messages, :io
-
   def print_board_with_move(move, board, player)
     if board.valid_move?(move)
       print_board(board.make_move(move, player))
