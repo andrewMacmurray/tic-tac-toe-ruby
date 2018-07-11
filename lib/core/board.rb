@@ -4,25 +4,32 @@ class Board
   attr_reader :board_size
   attr_reader :tiles
 
-  def initialize(board_size = 3) 
+  def initialize(board_size = 3, tiles = []) 
     @board_size = board_size
-    @tiles = create_tiles
+    @tiles = handle_create_tiles(tiles)
   end
 
   def available_moves
     available_tiles.map { |tile| tile.number }
   end
 
+  def valid_move?(move)
+    available_moves.include?(move) && !get_tile(move, tiles).nil?
+  end
+
   def make_move(tile_number, player_symbol)
-    tile = get_tile(tile_number) 
-    tile.player_symbol = player_symbol unless tile.nil?
+    if valid_move?(tile_number)
+      next_board(tile_number, player_symbol)
+    else
+      self
+    end
   end
 
   def terminus_reached?
-    is_full? || has_won?(:X) || has_won?(:O)
+    full? || has_won?(:X) || has_won?(:O)
   end
 
-  def is_full?
+  def full?
     tiles.all? { |tile| !tile.is_empty? }
   end
 
@@ -33,18 +40,32 @@ class Board
   end
 
   private
+  def next_board(tile_number, player_symbol)
+    Board.new(@board_size, next_tiles(tile_number, player_symbol))
+  end
+
+  def next_tiles(tile_number, player_symbol)
+    tiles = copy_tiles
+    mark_tile(tile_number, player_symbol, tiles)
+    tiles
+  end
+
+  def mark_tile(tile_number, player_symbol, tiles)
+    get_tile(tile_number, tiles).player_symbol = player_symbol
+  end
+
   def available_tiles
     tiles.select { |tile| tile.is_empty? }
   end
 
   def has_winning_combination?(combination, player_symbol)
     combination.all? do |tile_number|
-      tile = get_tile(tile_number)
+      tile = get_tile(tile_number, tiles)
       tile.player_symbol == player_symbol
     end
   end
 
-  def get_tile(tile_number)
+  def get_tile(tile_number, tiles)
     tiles.find { |tile| tile.number == tile_number }
   end
 
@@ -56,7 +77,15 @@ class Board
     ]
   end
 
-  def create_tiles
+  def copy_tiles
+    Marshal.load(Marshal.dump(tiles))
+  end
+
+  def handle_create_tiles(tiles)
+    tiles.length > 0 ? tiles : create_new_tiles
+  end
+
+  def create_new_tiles
     indicies = 1..(board_size * board_size)
     indicies.map do |number|
       Tile.new(number)

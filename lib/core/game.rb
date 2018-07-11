@@ -1,13 +1,14 @@
 class Game
   def initialize(options)
     @board = options[:board]
-    @players = options[:players]
+    @players_factory = options[:players_factory]
     @ui = options[:ui]
   end
 
   def play
     ui.greet_user
-    play_round
+    game_choice!
+    play_round!
   end
 
   private
@@ -15,35 +16,34 @@ class Game
   attr_reader :ui
   attr_accessor :board
 
-  def play_round
+  def game_choice!
+    @players = ui.get_players(@players_factory)
+  end
+
+  def play_round!
     while !board.terminus_reached? do
-      next_move = ui.get_move
-      play_move(next_move)
+      evaluate_move!
     end    
-    game_summary
+    ui.game_summary(board)
   end
 
-  def play_move(move)
-    ui.clear
-    make_move(move)
-    move_summary(move)
-    players.switch
+  def evaluate_move!
+    move = request_move
+    if board.valid_move?(move)
+      make_move!(move)
+    end
   end
 
-  def make_move(move)
-    board.make_move(move, players.current_player_symbol)
-    ui.show_board(board)
+  def request_move
+    player   = players.current_player_symbol
+    opponent = players.current_opponent_symbol
+    move     = players.request_move(board)
+    ui.move_summary(move, board, player, opponent)
+    move
   end
 
-  def move_summary(move)
-    player  = players.current_player_symbol
-    oponent = players.current_oponent_symbol
-    ui.show_move_summary(move, player, oponent)
-  end
-
-  def game_summary
-    ui.show_draw    if board.is_full?
-    ui.show_win(:X) if board.has_won?(:X)
-    ui.show_win(:O) if board.has_won?(:O)
+  def make_move!(move)
+    @board = board.make_move(move, players.current_player_symbol)
+    @players.switch
   end
 end

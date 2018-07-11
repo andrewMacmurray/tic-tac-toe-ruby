@@ -1,58 +1,81 @@
 require "core/game"
+require "core/board"
 require "core/players/players"
-require "core/players/player"
+require "core/players/human_player"
+require "console/console"
+require "console/console_io"
 
 describe Game do
-  it "plays a winning game correctly" do
-    players = Players.new(
-      Player.new(:X),
-      Player.new(:O)
-    ) 
-    move_sequence = [1, 4, 2, 5, 3]
-    board = Board.new
-    ui = ui_spy(move_sequence)
+  it "requests a player option from the user" do
+    ui = ui_stub
+    players_factory = factory_stub([1, 4, 2, 5, 3], ui)
+
     game = Game.new(
-      board: board,
-      players: players,
+      board: Board.new,
+      players_factory: players_factory,
       ui: ui
     )
 
-    game.play
+    expect(players_factory).to receive(:create).once.with(1)
 
-    expect(board.terminus_reached?).to be(true)
-    expect(board.has_won?(:X)).to be(true)
+    game.play
+  end
+
+  it "plays a winning game correctly" do
+    ui = ui_stub
+    players = factory_stub([1, 4, 2, 5, 3], ui)
+
+    game = Game.new(
+      board: Board.new,
+      players_factory: players,
+      ui: ui
+    )
+
+    expect(ui).to_not receive(:print_draw)
+    expect(ui).to receive(:print_win).once.with(:X)
+
+    game.play
   end
 
   it "plays until a draw" do
-    players = Players.new(
-      Player.new(:X),
-      Player.new(:O)
-    )
-    move_sequence = [1, 2, 3, 5, 8, 4, 6, 9, 7]
-    board = Board.new
-    ui = ui_spy(move_sequence)
+    ui = ui_stub
+    players = factory_stub([1, 2, 3, 5, 8, 4, 6, 9, 7], ui)
+
     game = Game.new(
-      board: board,
-      players: players,
+      board: Board.new,
+      players_factory: players,
       ui: ui
     )
 
-    game.play
+    expect(ui).to receive(:print_draw).once
+    expect(ui).to_not receive(:print_win)
 
-    expect(board.terminus_reached?).to be(true)
-    expect(board.is_full?).to be(true)
+    game.play
   end
 
-  def ui_spy(move_sequence)
-    ui = spy()
-    allow(ui).to receive(:get_move) { move_sequence.shift }
-    allow(ui).to receive(:show_win)
-    allow(ui).to receive(:show_draw)
-
-    expect(ui).to receive(:greet_user).once
-    expect(ui).to receive(:clear).at_least(move_sequence.length)
-    expect(ui).to receive(:show_board).at_least(move_sequence.length)
-    expect(ui).to receive(:show_move_summary).at_least(move_sequence.length)
+  def ui_stub
+    ui = Console.new(ConsoleIO.new(input: StringIO.new("1"), output: StringIO.new))
+    allow(ui).to receive(:print_win)
+    allow(ui).to receive(:print_draw)
     ui
+  end
+
+  def factory_stub(move_sequence, ui)
+    factory = PlayersFactory.new(ui)
+    allow(factory).to receive(:create) { players_stub(move_sequence, ui) }
+    factory
+  end
+
+  def players_stub(move_sequence, ui)
+    players = build_players(ui)
+    allow(players).to receive(:request_move) { move_sequence.shift }
+    players
+  end
+
+  def build_players(ui)
+    Players.new(
+      HumanPlayer.new(:X, ui),
+      HumanPlayer.new(:O, ui)
+    )
   end
 end

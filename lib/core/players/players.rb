@@ -9,7 +9,11 @@ class Players
     current_player.symbol
   end
 
-  def current_oponent_symbol
+  def request_move(board)
+    current_player.request_move(board)
+  end
+
+  def current_opponent_symbol
     if current_player.symbol == player_1.symbol
       player_2.symbol
     else
