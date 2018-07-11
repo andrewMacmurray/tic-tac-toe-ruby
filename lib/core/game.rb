@@ -7,7 +7,7 @@ class Game
 
   def play
     ui.greet_user
-    game_choice!
+    game_settings!
     play_round!
   end
 
@@ -16,8 +16,11 @@ class Game
   attr_reader :ui
   attr_accessor :board
 
-  def game_choice!
-    @players = ui.get_players(@players_factory)
+  def game_settings!
+    choice   = ui.game_choice
+    @players = @players_factory.create(choice) 
+    ui.use_emojis
+    ui.game_instructions(@players.current_player_symbol, board)
   end
 
   def play_round!

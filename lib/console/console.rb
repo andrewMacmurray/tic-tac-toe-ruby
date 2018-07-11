@@ -12,12 +12,23 @@ class Console
     print(messages.greet_user)
   end
 
-  def get_players(players_factory)
+  def game_choice
     print_options
     prompt
-    players = players_factory.create(get_game_choice)
-    game_instructions(players.current_player_symbol)
-    players
+    get_game_choice 
+  end
+
+  def game_instructions(player, board)
+    clear_screen
+    print_board(board)
+    print(messages.instructions(player))
+  end
+
+  def use_emojis
+    print(messages.use_emojis)
+    print(messages.yes_no)
+    prompt
+    get_emoji_choice
   end
 
   def request_move(board = nil)
@@ -39,8 +50,11 @@ class Console
 
   private
   attr_reader :board_renderer, :messages, :io
-  def game_instructions(player)
-    print(messages.instructions(player))
+
+  def get_emoji_choice
+    if io.read_yes_no
+      board_renderer.set_player_emojis({:X => "✨", :O => "👾"})
+    end
   end
   
   def print_board_with_move(move, board, player)

@@ -83,7 +83,6 @@ describe BoardRenderer do
       " 4  | #{o} | 6  ",
       " 7  | 8  | 9  "
     ].join("\n")
-    print actual_lines
 
     expect(actual_lines).to eq(expected_lines)
   end

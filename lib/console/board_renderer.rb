@@ -41,7 +41,7 @@ class BoardRenderer
       return winning_tile(tile, @o_config) if tile == :O and win_tile
       return player_tile(tile,  @x_config) if tile == :X
       return player_tile(tile,  @o_config) if tile == :O
-      pad(tile.to_s)
+      return pad(tile.to_s)
     end
   end
 

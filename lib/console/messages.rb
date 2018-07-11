@@ -17,8 +17,16 @@ class Messages
     "> "
   end
 
+  def use_emojis
+    "Would you like to use emojis as tiles?"
+  end
+
+  def yes_no
+    "Enter Y or N"
+  end
+
   def unrecognised
-    "Sorry I didn't recognise that"
+    "Sorry I didn't recognise that "
   end
 
   def instructions(player)
