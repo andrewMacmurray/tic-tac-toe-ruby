@@ -1,7 +1,11 @@
+require "colorize"
 require "console/board_renderer"
 require "core/board"
 
 describe BoardRenderer do
+  let(:x) { "X".light_blue }
+  let(:o) { "O".green }
+
   it "should turn a board into renderable lines" do
     board = Board.new
     board_renderer = BoardRenderer.new
@@ -16,7 +20,7 @@ describe BoardRenderer do
     expect(actual_lines).to eq(expected_lines)
   end
 
-  it "should render player moves correctly on a board" do
+  it "should render player moves with default colors correctly on a board" do
     board_renderer = BoardRenderer.new
     player_1 = :X
     player_2 = :O 
@@ -28,7 +32,7 @@ describe BoardRenderer do
 
     actual_lines = board_renderer.render(board)
     expected_lines = [
-      "X | 2 | O",
+      "#{x} | 2 | #{o}",
       "4 | 5 | 6",
       "7 | 8 | 9"
     ].join("\n")

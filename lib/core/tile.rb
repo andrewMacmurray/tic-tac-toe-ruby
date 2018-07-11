@@ -14,4 +14,8 @@ class Tile
   def to_s
     is_empty? ? number : player_symbol
   end
+
+  def to_s_with(custom_to_s_lambda)
+    custom_to_s_lambda.call(to_s)
+  end
 end

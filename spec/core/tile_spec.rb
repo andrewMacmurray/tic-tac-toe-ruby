@@ -29,4 +29,20 @@ describe Tile do
     tile = Tile.new(3)
     expect(tile.to_s).to eq(3)
   end
+
+  it "can apply a custom to_s to a tile" do
+    custom_f = lambda do |tile|
+      return "foo" if tile == :X
+      return "bar" if tile == :O
+      "baz #{tile}"
+    end
+
+    tile1 = Tile.new(3)
+    tile2 = Tile.new(:X)
+    tile3 = Tile.new(:O)
+
+    expect(tile1.to_s_with(custom_f)).to eq("baz 3")
+    expect(tile2.to_s_with(custom_f)).to eq("foo")
+    expect(tile3.to_s_with(custom_f)).to eq("bar")
+  end
 end
