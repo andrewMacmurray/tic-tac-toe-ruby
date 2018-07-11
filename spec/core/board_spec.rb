@@ -61,4 +61,19 @@ describe Board do
       expect(board.has_won?(:X)).to be(true)
     end
   end
+
+  it "retrievies the winning moves" do
+    board = Board.new
+      .make_move(1, :X)
+      .make_move(2, :X)
+      .make_move(3, :X)
+
+    expect(board.winning_moves).to eq([1, 2, 3])
+  end
+
+  it "gives an empty list if no winning moves" do
+    board = Board.new
+
+    expect(board.winning_moves).to eq([])
+  end
 end

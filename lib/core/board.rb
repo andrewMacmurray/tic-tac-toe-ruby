@@ -33,9 +33,16 @@ class Board
     tiles.all? { |tile| !tile.is_empty? }
   end
 
+  def winning_moves
+    moves = winning_combinations.find do |combination|
+      winning_combination?(combination, :X) || winning_combination?(combination, :O)
+    end
+    moves || []
+  end
+
   def has_won?(player_symbol)
     winning_combinations.any? do |combination|
-      has_winning_combination?(combination, player_symbol)
+      winning_combination?(combination, player_symbol)
     end
   end
 
@@ -58,7 +65,7 @@ class Board
     tiles.select { |tile| tile.is_empty? }
   end
 
-  def has_winning_combination?(combination, player_symbol)
+  def winning_combination?(combination, player_symbol)
     combination.all? do |tile_number|
       tile = get_tile(tile_number, tiles)
       tile.player_symbol == player_symbol
