@@ -14,9 +14,9 @@ describe HumanPlayer do
     player = HumanPlayer.new(:X, ui) 
     board = Board.new
 
-    move = player.request_move(board)
+    expect(ui).to receive(:request_move).once
 
-    expect(move).to eq(3)
+    player.request_move(board)
   end
 
   def build_ui(input = "")

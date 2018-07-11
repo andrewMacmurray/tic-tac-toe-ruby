@@ -84,6 +84,21 @@ describe Console do
     expect(output.string).to eq(expected_output)
   end
 
+  it "displays win correctly when board is full" do
+    output = build_output
+    console = build_console(output)
+    board = build_full_winning_board
+
+    console.game_summary(board) 
+
+    expected_output = [
+      clear_sequence + board_renderer.render(board),
+      messages.player_win(:X)
+    ].join("\n") + "\n"
+
+    expect(output.string).to eq(expected_output)
+  end
+
   it "prompts user for game choice, returns players" do
     output = build_output
     console = build_console(output, StringIO.new("1"))
@@ -123,10 +138,17 @@ describe Console do
   end
 
   def build_draw_board
+    run_board([1, 2, 3, 5, 8, 4, 6, 9, 7])
+  end
+
+  def build_full_winning_board
+    run_board([1, 2, 3, 4, 5, 6, 8, 7, 9])
+  end
+
+  def run_board(sequence)
     board = Board.new
     players = build_players
-    draw_sequence = [1, 2, 3, 5, 8, 4, 6, 9, 7]
-    draw_sequence.each do |move|
+    sequence.each do |move|
       board = board.make_move(move, players.current_player_symbol)
       players.switch
     end

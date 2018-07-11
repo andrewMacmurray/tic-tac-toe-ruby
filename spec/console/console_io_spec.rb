@@ -1,7 +1,8 @@
 require "console/console_io"
+require "console/messages"
 
 describe ConsoleIO do
-  let(:error_message) { "Sorry I didn't recognise that" }
+  let(:unrecognised) { Messages.new.unrecognised }
 
   it "prints messages to the screen" do
     output = StringIO.new
@@ -20,15 +21,15 @@ describe ConsoleIO do
     expect(result).to eq(3)
   end
 
-  it """prints an error message for non integer input
-        retries until a valid input found""" do
+  it "prints an error message for non integer input
+      retries until a valid input found" do
     input = StringIO.new("hello\n3")
     output = StringIO.new
     console_io = ConsoleIO.new(input: input, output: output)
 
     result = console_io.read_int_in_range(1, 9)
 
-    expect(output.string).to include(error_message)
+    expect(output.string).to include(unrecognised)
     expect(result).to eq(3)
   end
 
@@ -39,7 +40,7 @@ describe ConsoleIO do
 
     result = console_io.read_int_in_range(1, 9)
 
-    expect(output.string).to include(error_message)
+    expect(output.string).to include(unrecognised)
     expect(result).to eq(5)
   end
 end
