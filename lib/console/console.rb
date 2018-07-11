@@ -57,9 +57,9 @@ class Console
   end
 
   def print_terminus(board)
-    print_draw    if board.full?
-    print_win(:X) if board.has_won?(:X)
-    print_win(:O) if board.has_won?(:O)
+    return print_win(:X) if board.has_won?(:X)
+    return print_win(:O) if board.has_won?(:O)
+    return print_draw    if board.full?
   end
 
   def print_move_summary(move, player, oponent, board)

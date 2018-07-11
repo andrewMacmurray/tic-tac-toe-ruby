@@ -23,11 +23,11 @@ class ComputerPlayer < Player
   end
 
   def second_move(board)
-    board.valid_move?(5) ? 5 : run_minimax(board)
+    board.valid_move?(5) ? 5 : 1 
   end
 
   def first_move(board)
-    board.valid_move?(1) ? 1 : 5
+    1
   end
 
   def run_minimax(board)

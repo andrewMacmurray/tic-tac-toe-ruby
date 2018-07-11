@@ -1,5 +1,7 @@
 class Messages
-  def greet_user() "Welcome to Tic Tac Toe!" end
+  def greet_user
+    "Welcome to Tic Tac Toe!"
+  end
 
   def options
     [
@@ -11,9 +13,13 @@ class Messages
     ]
   end
 
-  def prompt() "> " end
+  def prompt
+    "> "
+  end
 
-  def unrecognised() "Sorry I didn't recognise that" end
+  def unrecognised
+    "Sorry I didn't recognise that"
+  end
 
   def instructions(player)
     "Ok player #{player} enter a number from 1-9"

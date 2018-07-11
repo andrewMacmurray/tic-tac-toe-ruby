@@ -20,9 +20,9 @@ class ConsoleIO
   end
 
   def read_int_in_range(from, to)
-    val = get_next
-    if valid_digit?(val) && in_range?(val, from, to)
-      val.to_i
+    string_value = get_next
+    if valid_digit?(string_value) && in_range?(string_value, from, to)
+      string_value.to_i
     else
       puts(messages.unrecognised)
       print(messages.prompt)

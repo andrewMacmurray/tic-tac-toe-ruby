@@ -22,12 +22,12 @@ class Game
 
   def play_round!
     while !board.terminus_reached? do
-      eval_move!
+      evaluate_move!
     end    
     ui.game_summary(board)
   end
 
-  def eval_move!
+  def evaluate_move!
     move = request_move
     if board.valid_move?(move)
       make_move!(move)
@@ -35,10 +35,10 @@ class Game
   end
 
   def request_move
-    player  = players.current_player_symbol
-    oponent = players.current_oponent_symbol
-    move    = players.request_move(board)
-    ui.move_summary(move, board, player, oponent)
+    player   = players.current_player_symbol
+    opponent = players.current_opponent_symbol
+    move     = players.request_move(board)
+    ui.move_summary(move, board, player, opponent)
     move
   end
 
