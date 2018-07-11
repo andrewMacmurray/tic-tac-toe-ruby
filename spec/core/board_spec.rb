@@ -50,7 +50,7 @@ describe Board do
   it "indicates if a player has a winning combination" do
     winning_combinations =  [
       [1,2,3], [4,5,6], [7,8,9],
-      [1,4,7], [2,5,8], [3,5,9],
+      [1,4,7], [2,5,8], [3,6,9],
       [1,5,9], [3,5,7]
     ]
 
@@ -60,5 +60,20 @@ describe Board do
 
       expect(board.has_won?(:X)).to be(true)
     end
+  end
+
+  it "retrievies the winning moves" do
+    board = Board.new
+      .make_move(1, :X)
+      .make_move(2, :X)
+      .make_move(3, :X)
+
+    expect(board.winning_moves).to eq([1, 2, 3])
+  end
+
+  it "gives an empty list if no winning moves" do
+    board = Board.new
+
+    expect(board.winning_moves).to eq([])
   end
 end
