@@ -2,12 +2,27 @@ require "colorize"
 
 class BoardRenderer
   def initialize()
-    @x_colors = {:color => :light_blue, :background => :on_cyan}
-    @o_colors = {:color => :green,      :background => :on_light_green}
+    @emojis   = false
+    @x_config = {
+      :color      => :light_blue,
+      :background => :on_cyan,
+      :tile       => "X"
+    }
+    @o_config = {
+      :color      => :green,
+      :background => :on_light_green,
+      :tile       => "O"
+    }
   end
 
   def render(board)
     lines(tile_strings(board)).join("\n")
+  end
+
+  def set_player_emojis(emojis)
+    @x_config[:tile] = emojis[:X]
+    @o_config[:tile] = emojis[:O]
+    @emojis          = true
   end
 
   private
@@ -22,21 +37,26 @@ class BoardRenderer
   def colorize_tile(win_moves, tile_number)
     win_tile = winning_tile?(win_moves, tile_number)
     lambda do |tile|
-      return winning_tile(tile, @x_colors) if tile == :X and win_tile 
-      return winning_tile(tile, @o_colors) if tile == :O and win_tile
-      return player_tile(tile,  @x_colors) if tile == :X
-      return player_tile(tile,  @o_colors) if tile == :O
+      return winning_tile(tile, @x_config) if tile == :X and win_tile 
+      return winning_tile(tile, @o_config) if tile == :O and win_tile
+      return player_tile(tile,  @x_config) if tile == :X
+      return player_tile(tile,  @o_config) if tile == :O
       pad(tile.to_s)
     end
   end
 
-  def winning_tile(tile, player_colors)
-    inner_tile = player_tile(tile, player_colors)
-    colorize(inner_tile, player_colors[:background])
+  def winning_tile(tile, player_config)
+    inner_tile = player_tile(tile, player_config)
+    colorize(inner_tile, player_config[:background])
   end
 
-  def player_tile(tile, player_colors)
-    pad(colorize(tile, player_colors[:color]))
+  def player_tile(tile, player_config)
+    if @emojis
+      player_config[:tile].center(3)
+    else
+      t = pad(player_config[:tile])
+      colorize(t, player_config[:color])
+    end
   end
 
   def winning_tile?(win_moves, tile_number)
@@ -44,7 +64,8 @@ class BoardRenderer
   end
 
   def pad(tile)
-    " #{tile} "
+    return tile.center(4) if @emojis
+    return tile.center(3)
   end
 
   def colorize(tile, color)

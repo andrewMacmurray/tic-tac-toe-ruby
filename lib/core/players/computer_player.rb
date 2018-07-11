@@ -35,6 +35,6 @@ class ComputerPlayer < Player
   end
 
   def build_minimax
-    Minimax.new(player: self.symbol, oponent: self.oponent)
+    Minimax.new(player: self.symbol, opponent: self.oponent)
   end
 end
