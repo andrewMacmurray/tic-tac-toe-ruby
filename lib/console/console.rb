@@ -25,10 +25,10 @@ class Console
     get_move
   end
 
-  def move_summary(move, board, player, oponent)
+  def move_summary(move, board, player, opponent)
     clear_screen
     print_board_with_move(move, board, player)
-    print_move_summary(move, player, oponent, board)
+    print_move_summary(move, player, opponent, board)
   end
 
   def game_summary(board)
@@ -62,10 +62,10 @@ class Console
     return print_draw    if board.full?
   end
 
-  def print_move_summary(move, player, oponent, board)
+  def print_move_summary(move, player, opponent, board)
     if board.valid_move?(move)
       print(messages.player_move(move, player))
-      print(messages.player_turn(oponent))
+      print(messages.player_turn(opponent))
     else
       print(messages.already_taken(move))
     end
