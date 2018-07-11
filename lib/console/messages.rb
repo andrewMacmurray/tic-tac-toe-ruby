@@ -52,4 +52,12 @@ class Messages
   def draw
     "It's a draw!"
   end
+
+  def play_again
+    "Do you want to play another game?"
+  end
+
+  def goodbye
+    "Ok bye! 👋"
+  end
 end

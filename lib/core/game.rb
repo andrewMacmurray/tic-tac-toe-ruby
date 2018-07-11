@@ -7,14 +7,18 @@ class Game
 
   def play
     ui.greet_user
-    game_settings!
-    play_round!
+    run_single_game
+    play_again?
   end
 
   private
-  attr_reader :players
-  attr_reader :ui
+  attr_reader :players, :ui
   attr_accessor :board
+
+  def run_single_game
+    game_settings!
+    play_round!
+  end
 
   def game_settings!
     choice   = ui.game_choice
@@ -43,6 +47,19 @@ class Game
     move     = players.request_move(board)
     ui.move_summary(move, board, player, opponent)
     move
+  end
+
+  def play_again?
+    if @ui.play_again?
+      reset_board
+      play
+    else
+      @ui.goodbye
+    end
+  end
+
+  def reset_board
+    @board = Board.new
   end
 
   def make_move!(move)

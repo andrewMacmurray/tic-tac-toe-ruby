@@ -9,6 +9,7 @@ class Console
   end
 
   def greet_user
+    clear_screen
     print(messages.greet_user)
   end
 
@@ -26,8 +27,6 @@ class Console
 
   def use_emojis
     print(messages.use_emojis)
-    print(messages.yes_no)
-    prompt
     get_emoji_choice
   end
 
@@ -48,13 +47,21 @@ class Console
     print_terminus(board)
   end
 
+  def play_again?
+    print(messages.play_again)
+    yes_no?
+  end
+
+  def goodbye
+    print(messages.goodbye)
+  end
+
   private
   attr_reader :board_renderer, :messages, :io
 
   def get_emoji_choice
-    if io.read_yes_no
-      board_renderer.set_player_emojis({:X => "✨", :O => "👾"})
-    end
+    return board_renderer.emoji_tiles if yes_no?
+    return board_renderer.standard_tiles
   end
   
   def print_board_with_move(move, board, player)
@@ -111,6 +118,12 @@ class Console
 
   def get_game_choice
     io.read_int_in_range(1, 3)
+  end
+
+  def yes_no?
+    print(messages.yes_no)
+    prompt
+    io.read_yes_no
   end
 
   def print(message)

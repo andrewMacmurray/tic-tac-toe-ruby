@@ -139,11 +139,6 @@ describe Console do
     expect(output.string).to include(messages.unrecognised)
   end
 
-  def build_console(output, input = StringIO.new)
-    console_io = ConsoleIO.new(input: input, output: output)
-    Console.new(console_io)
-  end
-
   it "asks user if they would like to play using emojis" do
     output = build_output
     console = build_console(output, StringIO.new("y"))
@@ -185,6 +180,11 @@ describe Console do
 
     expect(output.string).not_to include("✨")
     expect(output.string).not_to include("👾")
+  end
+
+  def build_console(output, input = StringIO.new)
+    console_io = ConsoleIO.new(input: input, output: output)
+    Console.new(console_io)
   end
 
   def build_output

@@ -20,11 +20,9 @@ describe BoardRenderer do
   end
 
   it "renders player moves with default colors correctly on a board" do
-    player_1 = :X
-    player_2 = :O 
     board = Board.new
-      .make_move(1, player_1)
-      .make_move(3, player_2)
+      .make_move(1, :X)
+      .make_move(3, :O)
 
     actual_lines = board_renderer.render(board)
     expected_lines = [
@@ -73,15 +71,33 @@ describe BoardRenderer do
   it "renders board with emojis as tiles" do
     x = "✨"
     o = "👾"
-    player_symbols = {:X => x, :O => o}
-    board_renderer.set_player_emojis(player_symbols)
-
     board = Board.new.make_move(1, :X).make_move(5, :O)
+
+    board_renderer.emoji_tiles
+
     actual_lines = board_renderer.render(board)
     expected_lines = [
       " #{x} | 2  | 3  ",
       " 4  | #{o} | 6  ",
       " 7  | 8  | 9  "
+    ].join("\n")
+
+    expect(actual_lines).to eq(expected_lines)
+  end
+
+  it "switches back correctly from emoji mode" do
+    board = Board.new
+      .make_move(1, :X)
+      .make_move(3, :O)
+
+    board_renderer.emoji_tiles
+    board_renderer.standard_tiles
+
+    actual_lines = board_renderer.render(board)
+    expected_lines = [
+      "#{x}| 2 |#{o}",
+      " 4 | 5 | 6 ",
+      " 7 | 8 | 9 "
     ].join("\n")
 
     expect(actual_lines).to eq(expected_lines)
