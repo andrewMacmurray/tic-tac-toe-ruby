@@ -8,13 +8,9 @@ class PlayersFactory
   end
 
   def create(option)
-    if option ==  1
-      human_v_human
-    elsif option == 2
-      human_v_computer
-    else
-      computer_v_computer
-    end
+    return human_v_human       if option == 1
+    return human_v_computer    if option == 2
+    return computer_v_computer if option == 3
   end
 
   private

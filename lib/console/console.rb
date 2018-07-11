@@ -8,18 +8,20 @@ class Console
     @messages ||= Messages.new
   end
 
-  def game_choice
-    print_options
-    prompt
-    get_game_choice
+  def greet_user
+    print(messages.greet_user)
   end
 
-  def game_instructions(player)
-    print(messages.instructions(player))
+  def get_players(players_factory)
+    print_options
     prompt
+    players = players_factory.create(get_game_choice)
+    game_instructions(players.current_player_symbol)
+    players
   end
-  
+
   def request_move(board = nil)
+    prompt
     get_move
   end
 
@@ -27,7 +29,6 @@ class Console
     clear_screen
     print_board_with_move(move, board, player)
     print_move_summary(move, player, oponent, board)
-    prompt
   end
 
   def game_summary(board)
@@ -36,12 +37,12 @@ class Console
     print_terminus(board)
   end
 
-  def greet_user
-    print(messages.greet_user)
-  end
-
   private
   attr_reader :board_renderer, :messages, :io
+  def game_instructions(player)
+    print(messages.instructions(player))
+  end
+  
   def print_board_with_move(move, board, player)
     if board.valid_move?(move)
       print_board(board.make_move(move, player))

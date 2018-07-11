@@ -8,7 +8,7 @@ class Game
   def play
     ui.greet_user
     game_choice!
-    play_round
+    play_round!
   end
 
   private
@@ -17,12 +17,10 @@ class Game
   attr_accessor :board
 
   def game_choice!
-    option   = ui.game_choice
-    @players = @players_factory.create(option)
-    ui.game_instructions(@players.current_player_symbol)
+    @players = ui.get_players(@players_factory)
   end
 
-  def play_round
+  def play_round!
     while !board.terminus_reached? do
       eval_move!
     end    

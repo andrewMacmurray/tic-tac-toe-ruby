@@ -19,10 +19,7 @@ class Board
 
   def make_move(tile_number, player_symbol)
     if valid_move?(tile_number)
-      new_tiles = copy_tiles
-      tile = get_tile(tile_number, new_tiles) 
-      tile.player_symbol = player_symbol 
-      Board.new(3, new_tiles)
+      next_board(tile_number, player_symbol)
     else
       self
     end
@@ -43,6 +40,20 @@ class Board
   end
 
   private
+  def next_board(tile_number, player_symbol)
+    Board.new(@board_size, next_tiles(tile_number, player_symbol))
+  end
+
+  def next_tiles(tile_number, player_symbol)
+    tiles = copy_tiles
+    mark_tile(tile_number, player_symbol, tiles)
+    tiles
+  end
+
+  def mark_tile(tile_number, player_symbol, tiles)
+    get_tile(tile_number, tiles).player_symbol = player_symbol
+  end
+
   def available_tiles
     tiles.select { |tile| tile.is_empty? }
   end
@@ -67,9 +78,7 @@ class Board
   end
 
   def copy_tiles
-    tiles.map do |tile|
-      Tile.new(tile.number, tile.player_symbol)
-    end
+    Marshal.load(Marshal.dump(tiles))
   end
 
   def handle_create_tiles(tiles)

@@ -29,23 +29,8 @@ describe Console do
     expected_output = [
       clear_sequence + board_renderer.render(board.make_move(3, :X)),
       messages.player_move(3, :X),
-      messages.player_turn(:O),
-      messages.prompt
-    ].join("\n") 
-
-    expect(output.string).to eq(expected_output)
-  end
-
-  it "instructs user to enter a number" do
-    output = build_output
-    console = build_console(output)
-
-    console.game_instructions(:X) 
-
-    expected_output = [
-      messages.instructions(:X),
-      messages.prompt
-    ].join("\n")
+      messages.player_turn(:O)
+    ].join("\n") + "\n"
 
     expect(output.string).to eq(expected_output)
   end
@@ -59,9 +44,8 @@ describe Console do
 
     expected_output = [
       clear_sequence + board_renderer.render(board),
-      messages.already_taken(3),
-      messages.prompt
-    ].join("\n") 
+      messages.already_taken(3)
+    ].join("\n") + "\n"
 
     expect(output.string).to eq(expected_output)
   end
@@ -100,26 +84,32 @@ describe Console do
     expect(output.string).to eq(expected_output)
   end
 
-  it "prompts user for game choice" do
+  it "prompts user for game choice, returns players" do
     output = build_output
     console = build_console(output, StringIO.new("1"))
+    players_factory = PlayersFactory.new(console)
 
-    choice = console.game_choice
+    expect(players_factory).to receive(:create).once.with(1).and_return(build_players)
 
-    lines = messages.options.concat([messages.prompt])
-    expected_output = lines.join("\n")
+    console.get_players(players_factory)
 
-    expect(choice).to eq(1)
+    expected_output = [
+      messages.options.join("\n"),
+      messages.prompt + messages.instructions(:X)
+    ].join("\n") + "\n"
+
     expect(output.string).to eq(expected_output)
   end
 
   it "retries until it valid game option received" do
     output = build_output
     console = build_console(output, StringIO.new("blah\n9\n3"))
+    players_factory = PlayersFactory.new(console)
 
-    choice = console.game_choice
+    expect(players_factory).to receive(:create).once.with(3).and_return(build_players)
 
-    expect(choice).to eq(3)
+    console.get_players(players_factory)
+    
     expect(output.string).to include(messages.unrecognised)
   end
 
@@ -134,14 +124,16 @@ describe Console do
 
   def build_draw_board
     board = Board.new
-    players = Players.new(Player.new(:X), Player.new(:O))
+    players = build_players
     draw_sequence = [1, 2, 3, 5, 8, 4, 6, 9, 7]
-
     draw_sequence.each do |move|
       board = board.make_move(move, players.current_player_symbol)
       players.switch
     end
-
     board
+  end
+
+  def build_players
+    Players.new(Player.new(:X), Player.new(:O))
   end
 end
