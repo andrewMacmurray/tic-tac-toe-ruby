@@ -1,7 +1,7 @@
 require "console/tile_renderer"
 
 class BoardRenderer
-  def initialize()
+  def initialize
     @tile_renderer = TileRenderer.new
   end
 

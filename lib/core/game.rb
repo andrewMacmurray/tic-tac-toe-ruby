@@ -17,13 +17,25 @@ class Game
 
   def run_single_game
     game_settings!
+    instructions
     play_round!
   end
 
   def game_settings!
+    game_choice!
+    emojis!
+  end
+
+  def game_choice!
     choice   = ui.game_choice
     @players = @players_factory.create(choice) 
+  end
+
+  def emojis!
     ui.use_emojis
+  end
+
+  def instructions
     ui.game_instructions(@players.current_player_symbol, board)
   end
 
@@ -50,12 +62,13 @@ class Game
   end
 
   def play_again?
-    if @ui.play_again?
-      reset_board
-      play
-    else
-      @ui.goodbye
-    end
+    return next_game if @ui.play_again?
+    return @ui.goodbye
+  end
+
+  def next_game
+    reset_board
+    play
   end
 
   def reset_board
