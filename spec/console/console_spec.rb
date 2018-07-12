@@ -160,12 +160,13 @@ describe Console do
     board = Board.new
         .make_move(1, :X)
         .make_move(2, :O)
+    board_renderer.emoji_tiles
 
     console.use_emojis
     console.move_summary(2, board, :O, :X)
 
-    expect(output.string).to include("✨")
-    expect(output.string).to include("👾")
+    emoji_board = board_renderer.render(board)
+    expect(output.string).to include(emoji_board)
   end
 
   it "uses regular characters if user enters no to emojis" do
@@ -180,6 +181,22 @@ describe Console do
 
     expect(output.string).not_to include("✨")
     expect(output.string).not_to include("👾")
+  end
+
+  it "renders move summary with emojis" do
+    output = StringIO.new
+    console = build_console(output, StringIO.new("y"))
+    board = Board.new
+
+    console.use_emojis
+    console.move_summary(2, board, :O, :X)
+
+    expected_output = [
+      messages.player_move(2, "👾"),
+      messages.player_turn("✨")
+    ].join("\n") + "\n"
+
+    expect(output.string).to include(expected_output)
   end
 
   def build_console(output, input = StringIO.new)

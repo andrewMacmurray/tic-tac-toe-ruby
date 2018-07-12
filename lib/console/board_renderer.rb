@@ -9,6 +9,10 @@ class BoardRenderer
     lines(tile_strings(board)).join("\n")
   end
 
+  def player_symbol(player)
+    @tile_renderer.player_symbol(player)
+  end
+
   def emoji_tiles
     @tile_renderer.toggle_emojis(true)
   end

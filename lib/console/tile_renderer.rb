@@ -12,6 +12,11 @@ class TileRenderer
     tile.to_s_with(colorize_tile(tile.number, win_moves))
   end
 
+  def player_symbol(player)
+    return @x_config.tile_symbol if player == :X
+    return @o_config.tile_symbol if player == :O
+  end
+  
   def toggle_emojis(on)
     on ? emojis_on : emojis_off
   end

@@ -22,7 +22,7 @@ class Console
   def game_instructions(player, board)
     clear_screen
     print_board(board)
-    print(messages.instructions(player))
+    print_instructions(player)
   end
 
   def use_emojis
@@ -85,11 +85,20 @@ class Console
 
   def print_move_summary(move, player, opponent, board)
     if board.valid_move?(move)
-      print(messages.player_move(move, player))
-      print(messages.player_turn(opponent))
+      print(messages.player_move(move, player_symbol(player)))
+      print(messages.player_turn(player_symbol(opponent)))
     else
       print(messages.already_taken(move))
     end
+  end
+
+  def print_instructions(player)
+    player = player_symbol(player)
+    print(messages.instructions(player))
+  end
+
+  def player_symbol(player)
+    @board_renderer.player_symbol(player)
   end
 
   def print_options
@@ -105,6 +114,7 @@ class Console
   end
 
   def print_win(player)
+    player = player_symbol(player)
     print(messages.player_win(player))
   end
 
