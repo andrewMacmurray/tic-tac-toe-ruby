@@ -1,12 +1,36 @@
+require "console/tile_renderer"
+
 class BoardRenderer
+  def initialize
+    @tile_renderer = TileRenderer.new
+  end
+
   def render(board)
-    tile_strings = board.tiles.map(&:to_s)
-    lines(tile_strings).join("\n")
+    lines(tile_strings(board)).join("\n")
+  end
+
+  def player_symbol(player)
+    @tile_renderer.player_symbol(player)
+  end
+
+  def emoji_tiles
+    @tile_renderer.toggle_emojis(true)
+  end
+
+  def standard_tiles
+    @tile_renderer.toggle_emojis(false)
   end
 
   private
+  def tile_strings(board)
+    win_moves = board.winning_moves
+    board.tiles.map do |tile|
+      @tile_renderer.render(tile, win_moves)
+    end
+  end
+
   def line_to_s(line)
-    line.join(" | ")
+    line.join("|")
   end
 
   def lines(tile_strings)

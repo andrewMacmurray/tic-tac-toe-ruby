@@ -1,7 +1,7 @@
 class Minimax
   def initialize(options = {})
     @player = options[:player] || :O
-    @oponent = options[:oponent] || :X
+    @opponent = options[:opponent] || :X
     @max_depth = 5
   end
 
@@ -12,7 +12,7 @@ class Minimax
   private
   def scores(board)
     move_scores = board.available_moves.map do |move|
-      next_board = board.make_move(move, @oponent)
+      next_board = board.make_move(move, @opponent)
       [move, minimax(next_board)]
     end
     move_scores.max_by { |x| x[1] }
@@ -24,7 +24,7 @@ class Minimax
 
   def minimize(board, depth)
     return heuristic_value(board, depth) if terminus?(board, depth) 
-    next_states(board, @oponent).map { |next_board| maximize(next_board, depth + 1) }.min
+    next_states(board, @opponent).map { |next_board| maximize(next_board, depth + 1) }.min
   end
 
   def maximize(board, depth)
@@ -42,7 +42,7 @@ class Minimax
 
   def heuristic_value(board, depth)
     return depth  if board.has_won?(@player)
-    return -depth if board.has_won?(@oponent)
+    return -depth if board.has_won?(@opponent)
     return 0
   end
 end

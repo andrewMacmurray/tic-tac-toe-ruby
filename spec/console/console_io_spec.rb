@@ -14,8 +14,7 @@ describe ConsoleIO do
 
   it "reads an integer in a given range" do
     input = StringIO.new("3")
-    output = StringIO.new
-    console_io = ConsoleIO.new(input: input, output: output)
+    console_io = ConsoleIO.new(input: input)
 
     result = console_io.read_int_in_range(1, 9)
     expect(result).to eq(3)
@@ -42,5 +41,34 @@ describe ConsoleIO do
 
     expect(output.string).to include(unrecognised)
     expect(result).to eq(5)
+  end
+
+  it "reads a yes input and returns true" do
+    input = StringIO.new("yEssS")
+    console_io = ConsoleIO.new(input: input)
+
+    result = console_io.read_yes_no
+
+    expect(result).to be(true)
+  end
+
+  it "reads a no input and returns false" do
+    input = StringIO.new("NO")
+    console_io = ConsoleIO.new(input: input)
+
+    result = console_io.read_yes_no
+
+    expect(result).to be(false)
+  end
+
+  it "retries until it reaches a yes or no" do
+    input = StringIO.new("3\nblah\nyes")
+    output = StringIO.new
+    console_io = ConsoleIO.new(input: input, output: output)    
+    
+    result = console_io.read_yes_no
+
+    expect(output.string).to include(unrecognised)
+    expect(result).to be(true)
   end
 end

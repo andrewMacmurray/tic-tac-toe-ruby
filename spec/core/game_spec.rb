@@ -6,6 +6,22 @@ require "console/console"
 require "console/console_io"
 
 describe Game do
+  it "prompts the user for game options" do
+    ui = ui_stub
+    board = Board.new
+    game = Game.new(
+      board: board,
+      players_factory: factory_stub([1, 4, 2, 5, 3], ui),
+      ui: ui
+    )
+    
+    expect(ui).to receive(:use_emojis).once
+    expect(ui).to receive(:game_choice).once
+    expect(ui).to receive(:game_instructions).once.with(:X, board)
+
+    game.play
+  end
+
   it "requests a player option from the user" do
     ui = ui_stub
     players_factory = factory_stub([1, 4, 2, 5, 3], ui)
@@ -53,8 +69,26 @@ describe Game do
     game.play
   end
 
+  it "gives the user the option to play again" do
+    ui = ui_stub
+    players = factory_stub([1, 4, 2, 5, 3], ui)
+    
+    game = Game.new(
+      board: Board.new,
+      players_factory: players,
+      ui: ui
+    )
+
+    expect(ui).to receive(:play_again?).once
+
+    game.play
+  end
+
   def ui_stub
-    ui = Console.new(ConsoleIO.new(input: StringIO.new("1"), output: StringIO.new))
+    ui = Console.new(ConsoleIO.new(input: StringIO.new, output: StringIO.new))
+    allow(ui).to receive(:play_again?).and_return(false)
+    allow(ui).to receive(:use_emojis).and_return(false)
+    allow(ui).to receive(:game_choice).and_return(1)
     allow(ui).to receive(:print_win)
     allow(ui).to receive(:print_draw)
     ui

@@ -24,16 +24,38 @@ class ConsoleIO
     if valid_digit?(string_value) && in_range?(string_value, from, to)
       string_value.to_i
     else
-      puts(messages.unrecognised)
-      print(messages.prompt)
+      print_retry
       read_int_in_range(from, to)
     end
   end
 
+  def read_yes_no
+    string_value = get_next
+    return true  if yes?(string_value) 
+    return false if no?(string_value) 
+    print_retry
+    read_yes_no
+  end
+
   private
-  attr_reader :input
-  attr_reader :output
-  attr_reader :messages
+  attr_reader :input, :output, :messages
+
+  def print_retry
+    print(messages.unrecognised)
+    print(messages.prompt)
+  end
+
+  def yes?(value)
+    starts_with?("Y", value)
+  end
+
+  def no?(value)
+    starts_with?("N", value)
+  end
+
+  def starts_with?(letter, value)
+    value.upcase.start_with?(letter)
+  end
 
   def get_next
     input.gets

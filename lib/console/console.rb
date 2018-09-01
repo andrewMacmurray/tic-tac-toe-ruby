@@ -9,15 +9,25 @@ class Console
   end
 
   def greet_user
+    clear_screen
     print(messages.greet_user)
   end
 
-  def get_players(players_factory)
+  def game_choice
     print_options
     prompt
-    players = players_factory.create(get_game_choice)
-    game_instructions(players.current_player_symbol)
-    players
+    get_game_choice 
+  end
+
+  def game_instructions(player, board)
+    clear_screen
+    print_board(board)
+    print_instructions(player)
+  end
+
+  def use_emojis
+    print(messages.use_emojis)
+    get_emoji_choice
   end
 
   def request_move(board = nil)
@@ -37,10 +47,21 @@ class Console
     print_terminus(board)
   end
 
+  def play_again?
+    print(messages.play_again)
+    yes_no?
+  end
+
+  def goodbye
+    print(messages.goodbye)
+  end
+
   private
   attr_reader :board_renderer, :messages, :io
-  def game_instructions(player)
-    print(messages.instructions(player))
+
+  def get_emoji_choice
+    return board_renderer.emoji_tiles if yes_no?
+    return board_renderer.standard_tiles
   end
   
   def print_board_with_move(move, board, player)
@@ -64,11 +85,20 @@ class Console
 
   def print_move_summary(move, player, opponent, board)
     if board.valid_move?(move)
-      print(messages.player_move(move, player))
-      print(messages.player_turn(opponent))
+      print(messages.player_move(move, player_symbol(player)))
+      print(messages.player_turn(player_symbol(opponent)))
     else
       print(messages.already_taken(move))
     end
+  end
+
+  def print_instructions(player)
+    player = player_symbol(player)
+    print(messages.instructions(player))
+  end
+
+  def player_symbol(player)
+    @board_renderer.player_symbol(player)
   end
 
   def print_options
@@ -84,6 +114,7 @@ class Console
   end
 
   def print_win(player)
+    player = player_symbol(player)
     print(messages.player_win(player))
   end
 
@@ -97,6 +128,12 @@ class Console
 
   def get_game_choice
     io.read_int_in_range(1, 3)
+  end
+
+  def yes_no?
+    print(messages.yes_no)
+    prompt
+    io.read_yes_no
   end
 
   def print(message)

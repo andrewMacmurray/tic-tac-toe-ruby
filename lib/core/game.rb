@@ -7,17 +7,36 @@ class Game
 
   def play
     ui.greet_user
-    game_choice!
-    play_round!
+    run_single_game
+    play_again?
   end
 
   private
-  attr_reader :players
-  attr_reader :ui
+  attr_reader :players, :ui
   attr_accessor :board
 
+  def run_single_game
+    game_settings!
+    instructions
+    play_round!
+  end
+
+  def game_settings!
+    game_choice!
+    emojis!
+  end
+
   def game_choice!
-    @players = ui.get_players(@players_factory)
+    choice   = ui.game_choice
+    @players = @players_factory.create(choice) 
+  end
+
+  def emojis!
+    ui.use_emojis
+  end
+
+  def instructions
+    ui.game_instructions(@players.current_player_symbol, board)
   end
 
   def play_round!
@@ -40,6 +59,20 @@ class Game
     move     = players.request_move(board)
     ui.move_summary(move, board, player, opponent)
     move
+  end
+
+  def play_again?
+    return next_game if @ui.play_again?
+    return @ui.goodbye
+  end
+
+  def next_game
+    reset_board
+    play
+  end
+
+  def reset_board
+    @board = Board.new
   end
 
   def make_move!(move)
